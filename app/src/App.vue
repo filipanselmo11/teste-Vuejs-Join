@@ -137,7 +137,6 @@ export default {
   },
   data: () => ({
     station_type_id: undefined,
-    dialog: false,
     types: undefined,
     stations: undefined,
     vectorGeoJSON: new VectorLayer(),

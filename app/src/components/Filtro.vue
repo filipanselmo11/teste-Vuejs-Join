@@ -11,8 +11,8 @@
               <v-card-text>
                 <br />
                 <v-select
-                  v-model="stationsTypesSelected"
-                  :items="stationTypeList"
+                  v-model="stations_types_selected"
+                  :items="station_type_list"
                   return-object
                   item-text="name"
                   label="Tipos"
@@ -26,7 +26,7 @@
                     <v-list-item ripple @click="change">
                       <v-list-item-action>
                         <v-icon color="cyan lighten-1" dark>
-                          {{ typesIcon }}
+                          {{ iconTypes }}
                         </v-icon>
                       </v-list-item-action>
                       <v-list-item-content>
@@ -39,8 +39,8 @@
 
                   <template v-slot:selection="data">
                     <v-chip
-                    color="cyan lighten-1"
-                    dark
+                      color="cyan lighten-1"
+                      dark
                       :key="JSON.stringify(data.item)"
                       v-bind="data.attrs"
                       :input-value="data.selected"
@@ -78,7 +78,7 @@
                     <v-list-item ripple @click="toggle">
                       <v-list-item-action>
                         <v-icon color="cyan lighten-1" dark>
-                          {{ stationsIcon }}
+                          {{ iconStations }}
                         </v-icon>
                       </v-list-item-action>
                       <v-list-item-content>
@@ -92,8 +92,8 @@
 
                   <template v-slot:selection="data">
                     <v-chip
-                    color="cyan lighten-1"
-                    dark
+                      color="cyan lighten-1"
+                      dark
                       :key="JSON.stringify(data.item)"
                       v-bind="data.attrs"
                       :input-value="data.selected"
@@ -104,16 +104,21 @@
                     </v-chip>
                   </template>
                 </v-select>
-                <span
-                  v-show="stationsSelected.length === 0"
-                  style="color: red"
-                  >Selecione pelo menos 1 tipo de estação e pelo menos 1 estação</span
+                <span v-show="stations_selected.length === 0" style="color: red"
+                  >Selecione pelo menos 1 tipo de estação e pelo menos 1
+                  estação</span
                 >
               </v-card-text>
               <v-divider></v-divider>
               <v-card-actions>
                 <v-spacer />
-                <v-btn :disabled="stationsSelected.length === 0" dark color="cyan lighten-1" @click="searching">Pesquisar</v-btn>
+                <v-btn
+                  :disabled="stations_selected.length === 0"
+                  dark
+                  color="cyan lighten-1"
+                  @click="searching"
+                  >Pesquisar</v-btn
+                >
               </v-card-actions>
             </v-card>
           </v-row>
@@ -127,10 +132,10 @@
 /* eslint-disable */
 export default {
   data: () => ({
-    stationList: [],
-    stationTypeList: [],
-    stationsTypesSelected: [],
-    stationsSelected: [],
+    station_list: [],
+    station_type_list: [],
+    stations_types_selected: [],
+    stations_selected: [],
     geojson: undefined,
   }),
 
@@ -143,11 +148,11 @@ export default {
   computed: {
     stations() {
       let ax = [];
-      if (this.stationsTypesSelected.length !== 0) {
-        for (let station in this.stationsTypesSelected) {
-          let fil = this.stationList.filter((a) => {
+      if (this.stations_types_selected.length !== 0) {
+        for (let station in this.stations_types_selected) {
+          let fil = this.station_list.filter((a) => {
             return (
-              a.stationTypeId === this.stationsTypesSelected[station].id
+              a.station_type_id === this.stations_types_selected[station].id
             );
           });
           for (let item in fil) {
@@ -162,37 +167,38 @@ export default {
 
     allTypes() {
       return (
-        this.stationsTypesSelected.length === this.stationTypeList.length
+        this.stations_types_selected.length === this.station_type_list.length
       );
     },
 
     determinedTypes() {
       return (
-        this.stationsTypesSelected.length > 0 &&
-        this.stationsTypesSelected.length < this.stationTypeList.length
+        this.stations_types_selected.length > 0 &&
+        this.stations_types_selected.length <
+          this.stations_types_selected.length
       );
     },
 
     cleanTypes() {
-      return this.stationsTypesSelected.length === 0;
+      return this.stations_types_selected.length === 0;
     },
 
     allStations() {
-      return this.stationsSelected.length === this.stations.length;
+      return this.stations_selected.length === this.stations.length;
     },
 
     determinedStations() {
       return (
-        this.stationsSelected.length > 0 &&
-        this.stationsSelected.length < this.stations.length
+        this.stations_selected.length > 0 &&
+        this.stations_selected.length < this.stations.length
       );
     },
 
     cleanStations() {
-      return this.stationsSelected.length === 0;
+      return this.stations_selected.length === 0;
     },
 
-    stationsIcon() {
+    iconStations() {
       if (this.allStations) {
         return "disabled_by_default";
       }
@@ -206,7 +212,7 @@ export default {
       }
     },
 
-    typesIcon() {
+    iconTypes() {
       if (this.allTypes) {
         return "disabled_by_default";
       }
@@ -222,26 +228,25 @@ export default {
   },
 
   methods: {
-    change(){
+    change() {
       this.$nextTick(() => {
         if (this.allTypes) {
-          this.stationsTypesSelected = []
-        }
-        else if(this.determinedTypes){
-          this.stationsTypesSelected = []
+          this.stations_types_selected = [];
+        } else if (this.determinedTypes) {
+          this.stations_types_selected = [];
         } else if (this.cleanTypes) {
-          this.stationsTypesSelected = this.stationTypeList.slice()
+          this.stations_types_selected = this.station_type_list.slice();
         }
-      })
+      });
     },
     toggle() {
       this.$nextTick(() => {
         if (this.allStations) {
-          this.stationsSelected = [];
+          this.stations_selected = [];
         } else if (this.determinedStations) {
-          this.stationsSelected = [];
+          this.stations_selected = [];
         } else if (this.cleanStations) {
-          this.stationsSelected = this.stations.slice();
+          this.stations_selected = this.stations.slice();
         }
       });
     },
@@ -265,7 +270,7 @@ export default {
       )
         .then((response) => response.json())
         .then((response) => {
-          this.stationList = response.station;
+          this.station_list = response.station;
         })
         .catch((e) => {
           console.log("Error: ", e);
@@ -278,7 +283,7 @@ export default {
       )
         .then((response) => response.json())
         .then((response) => {
-          this.stationTypeList = response.station_Type;
+          this.station_type_list = response.station_type;
         })
         .catch((e) => {
           console.log("Error: ", e);
@@ -288,10 +293,10 @@ export default {
     searching() {
       let features = [];
       for (let item in this.geojson.features) {
-        for (let station in this.stationsSelected) {
+        for (let station in this.stations_selected) {
           if (
             this.geojson.features[item].properties.id ===
-            this.stationsSelected[station].id
+            this.stations_selected[station].id
           ) {
             features.push(this.geojson.features[item]);
           }
@@ -299,7 +304,7 @@ export default {
       }
       this.geojson.features = features;
       this.$emit("stations", this.geojson);
-      this.$emit("types", this.stationsTypesSelected);
+      this.$emit("types", this.stations_types_selected);
       this.trackFeatures();
     },
   },
